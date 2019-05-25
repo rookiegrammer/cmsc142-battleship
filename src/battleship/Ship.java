@@ -8,9 +8,9 @@ public class Ship {
 		HORIZONTAL
 	}
 	
-	final ShipOrientation orientation;
-	final Point location;
-	final int length;
+	public final ShipOrientation orientation;
+	public final Point location;
+	public final int length;
 
 	public Ship(int length, Point location, ShipOrientation orientation) {
 		this.length = length;
@@ -30,14 +30,20 @@ public class Ship {
 		}
 	}
 	
-	protected static boolean checkCollision(Ship s1, Ship s2) {
+	public static boolean checkCollision(Ship s1, Ship s2) {
+		if (s1 == null || s2 == null) return false;
+		
 		boolean s1o = s1.orientation == ShipOrientation.HORIZONTAL;
-		boolean s2o = s1.orientation == ShipOrientation.HORIZONTAL;
+		boolean s2o = s2.orientation == ShipOrientation.HORIZONTAL;
+		
 		return s1.location.x < (s2.location.x + (s2o ? s2.length : 1)) &&
 			  (s1.location.x + (s1o ? s1.length : 1)) > s2.location.x  &&
 			   s1.location.y < (s2.location.y + (s2o ? 1 : s2.length)) &&
-			  (s1.location.y + (s1o ? 1 : s1.length)) < s2.location.y  ;
+			  (s1.location.y + (s1o ? 1 : s1.length)) > s2.location.y  ;
 	}
 	
+	public String toString() {
+		return "( "+location.x+", "+location.y+" ) "+(orientation == ShipOrientation.HORIZONTAL?"H":"V")+" length "+length;
+	}
 	
 }

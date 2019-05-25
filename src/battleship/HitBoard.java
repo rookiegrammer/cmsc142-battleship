@@ -1,6 +1,7 @@
 package battleship;
 
 import java.awt.Point;
+import java.util.Arrays;
 
 public class HitBoard {
 	private static final int isHIT = 1;
@@ -12,20 +13,20 @@ public class HitBoard {
 		NONE
 	}
 	
-	private int size;
-	private int[][] board;
+	public final int size;
+	private final int[][] board;
 	
 	public HitBoard(int size) {
 		this.board = new int[size][size];
 		this.size = size;
 	}
 	
-	public HitState getHit(Point location) {
-		if (location.y >= 0 && location.y < size && location.x >= 0 && location.x < size) return HitState.NONE;
+	public synchronized HitState getHit(Point location) {
+		if (location.y < 0 && location.y >= size && location.x < 0 && location.x >= size) return HitState.NONE;
 		return getState(board[location.y][location.x]);
 	}
 	
-	public void setHit(Point location, HitState state) {
+	public synchronized void setHit(Point location, HitState state) {
 		switch(state) {
 		case HIT:
 			board[location.y][location.x] = isHIT;
@@ -47,5 +48,12 @@ public class HitBoard {
 		default:
 			return HitState.NONE;
 		}
+	}
+	
+	public String toString() {
+		String sb = "";
+		for (int[] s: board)
+			sb+=Arrays.toString(s)+'\n';
+		return sb;
 	}
 }

@@ -9,18 +9,18 @@ public class GameInstance {
 	
 	protected final static boolean pursueMoves = true;
 	
-	protected class PlayerState {
+	public class PlayerState {
 		public boolean ready = false;
 		public Player instance;
 		public String id;
 		public HitBoard hitBoard;
-		private Ship[] ships;
+		public Ship[] ships;
 		private int[] shipsLife;
 		public void setupPlay(Player instance, int size) {
 			this.instance = instance;
 			hitBoard = new HitBoard(size);
 		}
-		public void setupShips(GameInstance game) {
+		public synchronized void setupShips(GameInstance game) {
 			ships = instance.setup(game);
 			shipsLife = new int[ships.length];
 			for (int i=0; i<ships.length; i++)
@@ -47,8 +47,8 @@ public class GameInstance {
 		}
 	}
 	
-	protected PlayerState p1State = new PlayerState();
-	protected PlayerState p2State = new PlayerState();
+	public PlayerState p1State = new PlayerState();
+	public PlayerState p2State = new PlayerState();
 	
 	public GameInstance(Player p1, Player p2, int size) {
 		p1State.setupPlay(p1, size);
@@ -56,9 +56,15 @@ public class GameInstance {
 		boardsize = size < 10 ? 10 : size;
 	}
 	
-	public void play() {
+	public boolean play() {
 		p1State.setupShips(this);
 		p2State.setupShips(this);
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		boolean p1Alive = true;
 		boolean p2Alive = true;
@@ -84,11 +90,7 @@ public class GameInstance {
 			p1Alive = p1State.isAlive();
 		}
 		
-		if (p1Alive) {
-			System.out.println("Player 1 Wins");
-		} else if (p2Alive) {
-			System.out.println("Player 2 Wins");
-		}
+		return p1Alive;
 	}
 	
 	public int getBoardSize() {

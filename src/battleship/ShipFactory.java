@@ -41,7 +41,7 @@ public class ShipFactory {
 	}
 	
 	public static Ship[] generateDefaultShips(int boardsize) {
-		Ship[] ships = new Ship[5];
+		Ship[] ships = {null, null, null, null, null};
 		Ship current;
 		
 		ships[0] = destroyer(boardsize);
