@@ -22,8 +22,6 @@ public class SimulationUI extends Canvas implements Runnable{
 	public void setup() {
 		game = new GameInstance(new RandomPlayer(), new RandomPlayer(), B_SIZE);
 	}
-	
-	private final Color[] colors = {Color.CYAN, Color.MAGENTA, Color.BLUE, Color.GREEN, Color.ORANGE};
 
 	private static final long serialVersionUID = 1L;
 	
@@ -165,7 +163,7 @@ public class SimulationUI extends Canvas implements Runnable{
 		for (int i=0; i<ships.length; i++) {
 			Ship cur = ships[i];
 			boolean isHorizontal = cur.orientation == ShipOrientation.HORIZONTAL;
-			g.setColor(colors[i%colors.length]);
+			g.setColor(cur.color);
 			for (int j=0; j<cur.length; j++) {
 				g.fillRect(xOff+squares(cur.location.x+(isHorizontal ? j: 0)), yOff+squares(cur.location.y+(isHorizontal ? 0: j)), SQUARE, SQUARE);
 			}
@@ -174,6 +172,8 @@ public class SimulationUI extends Canvas implements Runnable{
 	
 	private void drawBoard(int xOff, int yOff, HitBoard board, Graphics g) {
 		final int SQUARE = squares(1);
+		final int SQUAREHALF = SQUARE/2;
+		final int SQUAREFOUR = SQUAREHALF/2;
 		
 		for (int i = 0; i < board.size; i++) {
 			for (int j = 0; j < board.size; j++) {
@@ -184,11 +184,11 @@ public class SimulationUI extends Canvas implements Runnable{
 				switch (state) {
 				case HIT:
 					g.setColor(Color.RED);
-					g.fillRect(posX, posY, SQUARE, SQUARE);
+					g.fillOval(posX+SQUAREFOUR, posY+SQUAREFOUR, SQUAREHALF, SQUAREHALF);
 					break;
 				case MISS:
 					g.setColor(Color.DARK_GRAY);
-					g.fillRect(posX, posY, SQUARE, SQUARE);
+					g.fillOval(posX+SQUAREFOUR, posY+SQUAREFOUR, SQUAREHALF, SQUAREHALF);
 					break;
 				default: break;
 				}

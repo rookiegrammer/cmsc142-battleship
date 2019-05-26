@@ -1,5 +1,6 @@
 package battleship;
 
+import java.awt.Color;
 import java.awt.Point;
 
 import battleship.Ship.ShipOrientation;
@@ -12,32 +13,34 @@ public class ShipFactory {
 	public static final int CARRIER_LENGTH = 5;
 	
 	public static Ship destroyer(int boardsize) {
-		return generateRandomShip(DESTROYER_LENGTH, boardsize);
+		return generateRandomShip(DESTROYER_LENGTH, boardsize, Color.BLUE);
 	}
 	
 	public static Ship submarine(int boardsize) {
-		return generateRandomShip(SUBMARINE_LENGTH, boardsize);
+		return generateRandomShip(SUBMARINE_LENGTH, boardsize, Color.GREEN);
 	}
 	
 	public static Ship cruiser(int boardsize) {
-		return generateRandomShip(CRUISER_LENGTH, boardsize);
+		return generateRandomShip(CRUISER_LENGTH, boardsize, Color.PINK);
 	}
 	
 	public static Ship battleship(int boardsize) {
-		return generateRandomShip(BATTLESHIP_LENGTH, boardsize);
+		return generateRandomShip(BATTLESHIP_LENGTH, boardsize, Color.YELLOW);
 	}
 	
 	public static Ship carrier(int boardsize) {
-		return generateRandomShip(CARRIER_LENGTH, boardsize);
+		return generateRandomShip(CARRIER_LENGTH, boardsize, Color.ORANGE);
 	}
 	
-	public static Ship generateRandomShip(int shipSize, int boardSize) {
+	public static Ship generateRandomShip(int shipSize, int boardSize, Color c) {
 		final int boardLastL = boardSize - shipSize + 1;
 		final boolean isHorizontal = randomBoolean();
 		final ShipOrientation orientation = isHorizontal ? ShipOrientation.HORIZONTAL : ShipOrientation.VERTICAL;
 		final Point location = generateLocation(isHorizontal ? boardLastL : boardSize, isHorizontal ? boardSize : boardLastL);
 		
-		return new Ship(shipSize, location, orientation);
+		Ship ship = new Ship(shipSize, location, orientation);
+		ship.color = c == null ? ship.color : c;
+		return ship;
 	}
 	
 	public static Ship[] generateDefaultShips(int boardsize) {

@@ -60,12 +60,6 @@ public class GameInstance {
 		p1State.setupShips(this);
 		p2State.setupShips(this);
 		
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
 		boolean p1Alive = true;
 		boolean p2Alive = true;
 		

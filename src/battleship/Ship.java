@@ -1,5 +1,6 @@
 package battleship;
 
+import java.awt.Color;
 import java.awt.Point;
 
 public class Ship {
@@ -11,6 +12,7 @@ public class Ship {
 	public final ShipOrientation orientation;
 	public final Point location;
 	public final int length;
+	public Color color = Color.WHITE;
 
 	public Ship(int length, Point location, ShipOrientation orientation) {
 		this.length = length;
