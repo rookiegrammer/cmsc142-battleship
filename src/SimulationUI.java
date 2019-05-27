@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferStrategy;
@@ -67,13 +68,13 @@ public class SimulationUI extends Canvas implements Runnable{
 		setup();
 		running = true;
 		new Thread(this).start();
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
+		new Thread(() -> {
 				System.out.println(game.play().win ? "Player 1 Wins" : "Player 2 Wins" );
-				render();
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+				}
 				stop();
-			}
 		}).start();
 	}
 	
@@ -81,6 +82,7 @@ public class SimulationUI extends Canvas implements Runnable{
 		running = false;
 	}
 	
+	@SuppressWarnings("unused")
 	public void run() {	
 		long lastTime = System.nanoTime();
 		double nsPerTick = 1000000000D/60D;
