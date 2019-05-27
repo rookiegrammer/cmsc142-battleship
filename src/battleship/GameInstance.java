@@ -9,6 +9,14 @@ public class GameInstance {
 	
 	protected final static boolean pursueMoves = true;
 	
+	public class BattleshipResult {
+		public int turns;
+		public boolean win;
+		public String toString() {
+			return (win ? "Won - " : "Lost - ") + turns;
+		}
+	}
+	
 	public class PlayerState {
 		public boolean ready = false;
 		public Player instance;
@@ -56,35 +64,56 @@ public class GameInstance {
 		boardsize = size < 10 ? 10 : size;
 	}
 	
-	public boolean play() {
+	public BattleshipResult play() {
 		p1State.setupShips(this);
 		p2State.setupShips(this);
+		
+		int i = 0;
 		
 		boolean p1Alive = true;
 		boolean p2Alive = true;
 		
 		while(p1Alive && p2Alive) {
-			System.out.print("1 ");
-			
-			Point move = p1State.instance.nextMove();
-			if (pursueMoves)
-				while(p2State.hitBoard.getHit(move) != HitState.NONE)
-					move = p1State.instance.nextMove(); // Continue asking for moves if move already done
-			
-			p1State.instance.acknowledge(move, p2State.shoot(move));
+			i++;
+			HitState lastState = HitState.NONE;
+			Point move = null;
+			while (!valid(move)) {
+				
+				move = p1State.instance.nextMove();
+				if (pursueMoves)
+					while(p2State.hitBoard.getHit(move) != HitState.NONE)
+						move = p1State.instance.nextMove(); // Continue asking for moves if move already done
+				lastState = p2State.shoot(move);
+				p1State.instance.acknowledge(move, lastState);
+			}
+			if (Player.printMoves)
+				System.out.println("Player 1 "+(lastState == HitState.HIT ? "HIT" : "MISS") +" at ("+move.x +", "+move.y+")");
 			if (!(p2Alive = p2State.isAlive())) break;
 			
-			System.out.print("2 ");
-			move = p2State.instance.nextMove();
-			if (pursueMoves)
-				while(p1State.hitBoard.getHit(move) != HitState.NONE)
-					move = p2State.instance.nextMove();
-			
-			p2State.instance.acknowledge(move, p1State.shoot(move));
+			move = null;
+			while (!valid(move)) {
+				move = p2State.instance.nextMove();
+				if (pursueMoves)
+					while(p1State.hitBoard.getHit(move) != HitState.NONE)
+						move = p2State.instance.nextMove();
+				lastState = p1State.shoot(move);
+				p2State.instance.acknowledge(move, lastState);
+			}
+			if (Player.printMoves)
+				System.out.println("Player 2 "+(lastState == HitState.HIT ? "HIT" : "MISS") +" at ("+move.x +", "+move.y+")");
 			p1Alive = p1State.isAlive();
 		}
 		
-		return p1Alive;
+		BattleshipResult result = new BattleshipResult();
+		result.turns = i;
+		result.win = p1State.isAlive();
+		
+		return result;
+	}
+	
+	protected boolean valid(Point loc) {
+		if (loc == null) return false;
+		return loc.x >= 0 && loc.x < boardsize && loc.y >= 0 && loc.y < boardsize;
 	}
 	
 	public int getBoardSize() {

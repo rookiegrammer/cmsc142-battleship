@@ -22,11 +22,12 @@ public class HitBoard {
 	}
 	
 	public synchronized HitState getHit(Point location) {
-		if (location.y < 0 && location.y >= size && location.x < 0 && location.x >= size) return HitState.NONE;
+		if (location == null || location.y < 0 || location.y >= size || location.x < 0 || location.x >= size) return HitState.NONE;
 		return getState(board[location.y][location.x]);
 	}
 	
 	public synchronized void setHit(Point location, HitState state) {
+		if (location == null || location.y < 0 || location.y >= size || location.x < 0 || location.x >= size) return;
 		switch(state) {
 		case HIT:
 			board[location.y][location.x] = isHIT;

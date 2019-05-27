@@ -14,13 +14,14 @@ import battleship.HitBoard;
 import battleship.HitBoard.HitState;
 import battleship.Ship.ShipOrientation;
 import battleship.Ship;
+import battleship.players.BruteForcePlayer;
 import battleship.players.RandomPlayer;
 
 public class SimulationUI extends Canvas implements Runnable{
 	
 	// Change players here
 	public void setup() {
-		game = new GameInstance(new RandomPlayer(), new RandomPlayer(), B_SIZE);
+		game = new GameInstance(new BruteForcePlayer(), new RandomPlayer(), B_SIZE);
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -69,8 +70,9 @@ public class SimulationUI extends Canvas implements Runnable{
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println(game.play() ? "Player 1 Wins" : "Player 2 Wins" );
-				running = false;
+				System.out.println(game.play().win ? "Player 1 Wins" : "Player 2 Wins" );
+				render();
+				stop();
 			}
 		}).start();
 	}

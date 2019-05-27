@@ -5,6 +5,9 @@ import java.awt.Point;
 import battleship.HitBoard.HitState;
 
 public abstract class Player {
+	public static int pauseIntervals = 20;
+	public static boolean printMoves = true;
+	
 	protected GameInstance game;
 	
 	/**
